@@ -161,15 +161,6 @@ export default function App() {
         onChangeText={setEditora}
       />
 
-      {/* <Text style={styles.label}>Já leu o livro?</Text>
-    <Switch
-      value={isRead}
-      onValueChange={(value) => setIsRead(value)}
-      trackColor={{ false: "#767577", true: "#81b0ff" }}
-      thumbColor={isRead ? "#f5dd4b" : "#f4f3f4"}
-      ios_backgroundColor="#3e3e3e"
-    /> */}
-
       <Button
         title="Selecionar Imagem"
         onPress={selecionarImagem}
