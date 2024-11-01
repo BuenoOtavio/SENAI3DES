@@ -26,6 +26,6 @@ router.get('/os/:id', Os.read);
 router.put('/os', Os.update);
 router.delete('/os/:id', Os.del);
 
-router.get('/', (req, res) => { return res.json("API OSs respondendo") });
+
 
 module.exports = router;
