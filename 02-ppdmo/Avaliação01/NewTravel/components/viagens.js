@@ -5,8 +5,17 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useFonts, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
 export default function Viagens() {
+
+  const [fontsLoaded] = useFonts({
+    'Poppins-Regular': Poppins_400Regular,
+    'Poppins-Bold': Poppins_700Bold,
+  });
+
+  if (!fontsLoaded) return null;
+  
   const [tituloViagem, settituloViagem] = useState('');
   const [descricao, setDesc] = useState('');
   const [data, setData] = useState('');
@@ -122,7 +131,7 @@ export default function Viagens() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>ViagemsLidos</Text>
+      <Text style={styles.title}>NewTravel</Text>
 
       <Text style={styles.label}>Titulo da Viagem</Text>
       <TextInput
@@ -159,7 +168,7 @@ export default function Viagens() {
       <Button
         title="Selecionar Imagem"
         onPress={selecionarImagem}
-        color="#8a2be2"
+        color="#004d40"
       />
 
       {imageUri && (
@@ -169,7 +178,7 @@ export default function Viagens() {
       <Button
         title={loading ? "Salvando..." : editingViagemId ? "Atualizar Viagem" : "Adicionar Viagem"}
         onPress={adicionarOuAtualizarViagem}
-        color="#9370db"
+        color="#8ac66d"
       />
 
       <Text style={styles.sectionTitle}>Lista de Viagens</Text>
@@ -194,10 +203,10 @@ export default function Viagens() {
 
               <View style={styles.actionButtons}>
                 <TouchableOpacity onPress={() => editarViagem(item)} style={styles.actionButton}>
-                  <Icon name="edit" size={25} color="#8a2be2" />
+                  <Icon name="edit" size={25} color="#004d40" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => excluirViagem(item.id)} style={styles.actionButton}>
-                  <Icon name="trash" size={25} color="#ff6347" />
+                  <Icon name="trash" size={25} color="#8ac66d" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -211,89 +220,93 @@ export default function Viagens() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f1f8e9',  // Cor de fundo sutil
     padding: 20,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#8a2be2',
+    color: '#004d40',  // Cor do título para consistência
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   label: {
     fontSize: 18,
-    color: '#4b0082',
-    marginBottom: 10,
+    color: '#004d40',
+    marginBottom: 8,
   },
   input: {
-    borderColor: '#8a2be2',
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
+    borderColor: '#004d40',
+    borderWidth: 1.5,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 15,
+    color: '#004d40',
+    backgroundColor: '#ffffff',
   },
   imagePreview: {
     width: '100%',
     height: 200,
-    marginVertical: 10,
-    borderRadius: 10,
+    marginVertical: 15,
+    borderRadius: 12,
+    borderColor: '#8ac66d',
+    borderWidth: 1.5,
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4b0082',
-    marginBottom: 10,
+    color: '#004d40',
+    marginVertical: 15,
   },
   ViagemItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginBottom: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   ViagemImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 12,
     marginRight: 15,
   },
   ViagemIcon: {
+    fontSize: 40,
+    color: '#8ac66d',
     marginRight: 15,
   },
   ViagemDetails: {
     flex: 1,
   },
-  ViagemName: {
+  ViagemTitulo: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#4b0082',
+    color: '#004d40',
   },
-  ViagemAutor: {
-    fontSize: 16,
-    color: '#4b0082',
+  ViagemDescricao: {
+    fontSize: 14,
+    color: '#004d40',
   },
-  ViagemAno: {
-    fontSize: 16,
-    color: '#4b0082',
+  ViagemData: {
+    fontSize: 12,
+    color: '#547699',
   },
-  ViagemEditora: {
-    fontSize: 16,
-    color: '#4b0082',
-  },
-  ViagemStatus: {
-    fontSize: 16,
-    fontWeight: 'bold',
+  ViagemLocalizacao: {
+    fontSize: 12,
+    color: '#547699',
   },
   actionButtons: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   actionButton: {
-    marginHorizontal: 5,
+    marginHorizontal: 8,
   },
 });

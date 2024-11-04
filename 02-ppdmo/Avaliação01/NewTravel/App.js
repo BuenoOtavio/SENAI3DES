@@ -3,18 +3,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Viagem from './components/viagens';
 import Login from './components/login';
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    // Provider
     <NavigationContainer>
-
-      {/* Container de navegaçao */}
       <Stack.Navigator>
-
-        {/* Telas */}
         <Stack.Screen
             name="Login"
             component={Login}
@@ -23,11 +17,9 @@ export default function App() {
         <Stack.Screen
             name="Viagens"
             component={Viagem}
-            options={{ title: 'Tela Imc' }}
+            options={{ title: 'Tela de Viagens' }} // Nome corrigido
         />
-
       </Stack.Navigator>
-
     </NavigationContainer>
   );
 }

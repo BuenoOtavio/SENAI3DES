@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Animated } from 'react-native';
 import { auth } from '../firebaseconfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
-function Login({ onLogin, onGoBack }) {
+function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const fadeAnim = useState(new Animated.Value(0))[0];
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   const handleLogin = () => {
     if (email && password) {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          console.log('Usuário logado com sucesso');
-          onLogin(email);
+          navigation.navigate('Viagens');
         })
-        .catch((error) => {
-          console.error('Erro ao fazer login: ', error);
-          alert('Falha no login, verifique suas credenciais.');
-        });
+        .catch((error) => alert('Falha no login, verifique suas credenciais.'));
     } else {
       alert('Por favor, insira suas credenciais.');
     }
@@ -28,21 +33,17 @@ function Login({ onLogin, onGoBack }) {
     if (email && password) {
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-          console.log('Usuário cadastrado com sucesso');
           alert('Usuário cadastrado com sucesso!');
           setIsRegistering(false);
         })
-        .catch((error) => {
-          console.error('Erro ao fazer cadastro: ', error);
-          alert('Falha no cadastro, verifique suas informações.');
-        });
+        .catch((error) => alert('Falha no cadastro, verifique suas informações.'));
     } else {
       alert('Por favor, insira suas credenciais.');
     }
   };
 
   return (
-    <View style={styles.loginContainer}>
+    <Animated.View style={[styles.loginContainer, { opacity: fadeAnim }]}>
       <Text style={styles.title}>{isRegistering ? 'Cadastrar' : 'Login'} no NewTravel</Text>
 
       <View style={styles.formContainer}>
@@ -54,7 +55,6 @@ function Login({ onLogin, onGoBack }) {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-
         <TextInput
           style={styles.input}
           placeholder="Senha"
@@ -66,59 +66,91 @@ function Login({ onLogin, onGoBack }) {
         <View style={styles.buttons}>
           {isRegistering ? (
             <>
-              <Button color='#162040' title="Cadastrar" onPress={handleRegister} />
-              <Button color='#162040' title="Voltar para Login" onPress={() => setIsRegistering(false)} />
+              <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                <Text style={styles.buttonText}>Cadastrar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonOutline} onPress={() => setIsRegistering(false)}>
+                <Text style={styles.buttonTextOutline}>Voltar para Login</Text>
+              </TouchableOpacity>
             </>
           ) : (
             <>
-              <Button color='#162040' title="Entrar" onPress={handleLogin} />
-              <Button color='#162040' title="Cadastrar" onPress={() => setIsRegistering(true)} />
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Entrar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonOutline} onPress={() => setIsRegistering(true)}>
+                <Text style={styles.buttonTextOutline}>Cadastrar</Text>
+              </TouchableOpacity>
             </>
           )}
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
-    backgroundColor: '#badda8',  // Cor de fundo da tela
+    backgroundColor: '#f1f8e9',
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#162040',
-    textAlign: 'center',
-    marginBottom: 30,
+    color: '#004d40',
+    marginBottom: 40,
   },
   formContainer: {
     width: '100%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    padding: 25,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
   input: {
-    borderColor: '#162040',
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 20,
-    color: '#162040',
-    backgroundColor: '#f0f8ff',
+    borderColor: '#004d40',
+    borderWidth: 1.5,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 15,
+    color: '#004d40',
+    backgroundColor: '#f1f8e9',
   },
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    backgroundColor: '#004d40',
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  buttonOutline: {
+    flex: 1,
+    borderColor: '#004d40',
+    borderWidth: 1.5,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginHorizontal: 5,
+  },
+  buttonTextOutline: {
+    color: '#004d40',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
